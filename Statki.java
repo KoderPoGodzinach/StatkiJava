@@ -1,58 +1,78 @@
 package pl.KoderPoGodzinach;
-
 public class Main {
 
+    enum State {
+        EMPTY, HIT, MISS, SUNK
+    }
+
     public static void main(String[] args) {
-	// tworzymy 10 tablic o długości 10
-        char [][] board = new char[10][10];
-        
-        // metoda która będzie wypełniała tablice 
-        
+
+        State [][] board = new State[10][10];
         fillBoard(board);
-        
-        printLetters();
+
+        printLetter();
         printBoard(board);
-        printLetters();
+        printLetter();
         printBoard(board);
+
     }
 
-    private static void fillBoard(char[][] board) {
-        for (int i = 0; i < 10 ; i++) {
-            for (int j = 0; j <10 ; j++) {
-                board[i][j] = getRandomShip();
+    private static void fillBoard(State[][] board) {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                board[i][j] = getRandomShip(Math.random());
             }
         }
     }
 
-    static void printLetters() {
+    static void printLetter() {
         System.out.print("  ");
-        for (int i = 0; i <10 ; i++) {
-            System.out.print((char)('A'+i));
+        for (int i = 0; i < 10; i++) {
+            System.out.print((char) ('A' + i));
         }
-        System.out.println(" ");
+        System.out.print('\n');
     }
 
-    static void printBoard(char [][] board) { //mimo takiej samej nazwy są to dwie inne zmienne
-        for (int i = 0; i <10 ; i++) {      // ponieważ zmienne mają zasięgi
-            int numberToPrint  = i+1;
-            if(numberToPrint < 10) {
-                System.out.print(" ");
+    static void printBoard(State [][] board) {
+        for (int i = 0; i < 10; i++) {
+            int numberToPrint = i + 1;
+            if (numberToPrint < 10) {
+                System.out.print(' ');
             }
-            System.out.print(numberToPrint);  // wyświetlane dla 10 dodatkowa spacja
-            for (int j = 0; j < 10 ; j++) {
-                char shipValue = board[i][j]; //dostęp do poszczególnego wiersza i kolumny
+            System.out.print(numberToPrint);
+            for (int j = 0; j < 10; j++) {
+                char shipValue = stateToChar(board[i][j]);
                 System.out.print(shipValue);
             }
             System.out.print('\n');
         }
     }
-    private static char getRandomShip() {
-        if(Math.random() < 0.2) {
-            return 'O';
+
+    private static char stateToChar(State state) {
+        char value;
+        switch (state) {
+            case EMPTY:
+                value = ' ';
+                break;
+
+            case HIT:
+                value = 'O';
+                break;
+            default:
+                value = '?';
+
+        }
+        return value;
+
+    }
+
+    private static State getRandomShip(double random) {
+        if (random < 0.2) {
+            return State.HIT;
+        } else if(random > 0.8) {
+            return State.EMPTY;
         } else {
-            return 'X';
+            return State.MISS;
         }
     }
 }
-
-
